@@ -7,8 +7,10 @@ const SearchHistory = ({
 }) => {
   return (
     <div>
-      <div>Searched Places</div>
-      <button onClick={() => handleDeleteSearchHistory}>Delete</button>
+      <div className='flex flex-row p-4'>
+        <div className='pr-4'>Searched Places</div>
+        <button onClick={() => handleDeleteSearchHistory}>Delete</button>
+      </div>
       {Object.entries(searchHistory).map(([key, value]) => {
         return (
           <div key={key} className="searchHistoryContainer">

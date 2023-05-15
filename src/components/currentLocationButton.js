@@ -3,7 +3,7 @@ const CurrentLocationButton = ({
   handleButtonClick
 }) => {
   return (
-    <div>
+    <div className="border border-green-500 w-screen h-16">
       <button onClick={handleButtonClick}>
         Get Current Location
       </button>

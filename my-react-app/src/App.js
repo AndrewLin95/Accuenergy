@@ -51,7 +51,7 @@ function App() {
   }
 
   const handleDeleteSearchHistory = () => {
-
+    
   }
 
   const handleDeleteFlagClick = (checkboxState, id) => {
@@ -69,24 +69,20 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className='border border-red-500 w-screen h-screen overflow-hidden flex flex-col justify-center items-center'>
+        <div className='border border-red-800 border-solid w-28 h-96'>
           <CurrentLocationButton handleButtonClick={handleButtonClick}/>
-          <div className='flex flex-row w-full h-full'>
-            <div className='flex flex-col w-1/5 h-full border border-red-500'>
-              <SearchModule 
-                handleSearchText={handleSearchText} 
-                searchLocation={searchLocation}
-                handleSearchButton={handleSearchButton}
-              />
-              <SearchHistory 
-                searchHistory={searchHistory}
-                handleDeleteSearchHistory={handleDeleteSearchHistory}
-                handleDeleteFlagClick={handleDeleteFlagClick}
-              />
-            </div>
-            <div>
-                {geoLocation};
-            </div>
+          <SearchModule 
+            handleSearchText={handleSearchText} 
+            searchLocation={searchLocation}
+            handleSearchButton={handleSearchButton}
+          />
+          <SearchHistory 
+            searchHistory={searchHistory}
+            handleDeleteSearchHistory={handleDeleteSearchHistory}
+            handleDeleteFlagClick={handleDeleteFlagClick}
+          />
+          <div>
+            {geoLocation};
           </div>
         </div>
       </header>
