@@ -6,6 +6,7 @@
         className="w-2/3 mr-2 text-white p-2"
         @input="handleSearchTextChange($event.target.value)"
         :value="searchText"
+        @keyup.enter="handleSearchClick()"
       />
       <button
         @click="handleSearchClick()"
