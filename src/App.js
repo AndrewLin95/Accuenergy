@@ -89,7 +89,6 @@ function App() {
       }
       setPaginationState(tempPaginationArray);
     } else {
-      debugger;
       if (currPage === 1) {
         setPaginationState([1, 2, "...", numberOfPages]);
       } else if (currPage === 2) {
@@ -104,33 +103,15 @@ function App() {
     }
   }, [numberOfPages, currPage]) 
 
-  // const handlePaginationUpdate = () => {
-  //   if (numberOfPages <= 5) {
-  //     let i = 0;
-  //     const tempPaginationArray = [];
-  //     while (i < numberOfPages) {
-  //       tempPaginationArray.push(i + 1);
-  //       i++
-  //     }
-  //     setPaginationState(tempPaginationArray);
-  //   } else {
-  //     if (currPage <= 2) {
-  //       setPaginationState([1, 2, 3, "...", numberOfPages]);
-  //     } else if (currPage >= (numberOfPages - 2)) {
-  //       setPaginationState([1, "...", currPage, numberOfPages - 1, numberOfPages]);
-  //     } else {
-  //       setPaginationState([1, "...", currPage - 1, currPage, currPage + 1, "...", numberOfPages]);
-  //     }
-  //   }
-  // }
-
   const handlePageChange = (value) => {
+    if (value === "...") {
+      return;
+    }
     const indexOfLastPost = value * 10; 
     const indexOfFirstPost = indexOfLastPost - 10;
 
     const tempSearchHistory = [...searchHistory];
-    const filteredSearchHistory = tempSearchHistory.splice(indexOfFirstPost, indexOfLastPost);
-
+    const filteredSearchHistory = tempSearchHistory.slice(indexOfFirstPost, indexOfLastPost);
     setCurrPage(value);
     setSearchHistoryDisplayData(filteredSearchHistory)
   }
@@ -164,7 +145,6 @@ function App() {
                 handleSearchButton={handleSearchButton}
               />
               <SearchHistory 
-                searchHistory={searchHistory}
                 searchHistoryDisplayData={searchHistoryDisplayData}
                 handleDeleteSearchHistory={handleDeleteSearchHistory}
                 handleDeleteFlagClick={handleDeleteFlagClick}
