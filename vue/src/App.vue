@@ -8,7 +8,7 @@ import { format, utcToZonedTime} from 'date-fns-tz';
 
 import { GoogleMap, Marker } from 'vue3-google-map';
 
-const weatherAPI = import.meta.env.VITE_APP_WEATHER_API_KEY;
+const weatherK = "59d8f83c0d0672671941c70c99060910";
 const googleMapsAPI = ""
 
 export default {
@@ -62,7 +62,7 @@ export default {
 
     async handleSearchClick() {
       const uid = Math.random().toString(16).slice(2)
-      const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${this.searchText}&appid=${weatherAPI}`, {mode:'cors'})
+      const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${this.searchText}&appid=${weatherK}`, {mode:'cors'})
       const weatherGeocode = await response.json();
 
       if (weatherGeocode.length === 0) {
@@ -259,7 +259,7 @@ export default {
         :handleDeleteFlagClick="handleDeleteFlagClick"
         :handleDeleteSearchHistory="handleDeleteSearchHistory"
       />
-      <div v-if="loadingMap === false" className="h-full w-full border-pink-700">
+      <div v-if="loadingMap === false" className="h-full w-full">
         <GoogleMap 
           :api-key="googleMapsAPI"
           :center="geoLocation"
@@ -277,6 +277,11 @@ export default {
             }"
           />
         </GoogleMap>
+      </div>
+      <div v-else className="h-full w-full">
+        <div style="width: 100%; height: 100%" className="flex justify-center items-center">
+          Please get your current location first!
+        </div>
       </div>
     </div>
   </div>

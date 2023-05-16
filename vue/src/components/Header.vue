@@ -20,9 +20,11 @@
         {{ localTime }}
       </div>
       <button @click="handleClick">Get Current Location</button>
-      <div v-if="geoLocation.length !== 0" className="pl-8">
+      <div className="pl-8">
         <div className="font-bold">Current Location</div> 
-        Latitude: {{ geoLocation.lat }} || Longitude: {{ geoLocation.lng }}
+        <div v-if="geoLocation.length !== 0">
+          Latitude: {{ geoLocation.lat }} || Longitude: {{ geoLocation.lng }}
+        </div>
       </div>
     </div>
 </template>
