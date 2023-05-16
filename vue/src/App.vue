@@ -1,6 +1,10 @@
 <script>
 import Header from './components/Header.vue';
 import SearchModule from './components/SearchModule.vue';
+import ts from '@mapbox/timespace';
+import moment from 'moment-timezone';
+import { parseISO } from 'date-fns';
+import { format, utcToZonedTime} from 'date-fns-tz';
 
 import { GoogleMap, Marker } from 'vue3-google-map';
 
@@ -18,6 +22,8 @@ export default {
   data() {
     return {
       geoLocation: "",
+      localTime: "",
+      timeZone: "",
       searchText: "",
       searchHistory: [],
       updateFlag: false,
@@ -63,6 +69,12 @@ export default {
         return;
       }
 
+      const timestamp = Date.now();
+      const point = [weatherGeocode[0].lon, weatherGeocode[0].lat];
+      const time = ts.getFuzzyLocalTimeFromPoint(timestamp, point);
+      
+      this.localTime = time.toString();
+
       this.updateFlag = false;
 
       const searchObject = {
@@ -71,6 +83,7 @@ export default {
         lat: weatherGeocode[0].lat,
         lng: weatherGeocode[0].lon,
         searchTime: new Date(),
+        localTimeAtSearch: time.toString(),
         deleteFlag: false,
       }
 
@@ -233,6 +246,7 @@ export default {
     <Header 
       :geoLocation="geoLocation" 
       :handleGeoLocationClick="handleGeoLocationClick" 
+      :localTime="localTime"
     />
     <div className='flex flex-row w-full h-full'>
       <SearchModule 
