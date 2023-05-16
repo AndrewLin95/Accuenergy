@@ -1,7 +1,6 @@
 import GoogleMapReact from "google-map-react";
 import MarkerComponent from "./MarkerComponent";
 
-
 const Map = ({
   geoLocation,
   searchHistoryDisplayData,
@@ -26,20 +25,22 @@ const Map = ({
         }}
       >
         <MarkerComponent 
-          lat={geoLocation[0]}
-          lng={geoLocation[1]}
+          lat={43.7635623}
+          lng={-79.1887004}
+          location={"toronto"}
         />
-        {Object.entries(searchHistoryDisplayData).map(([key, value]) => {
+        {/* {Object.entries(searchHistoryDisplayData).map(([key, value]) => {
           console.log(value);
           return (
-            <MarkerComponent 
-              key={value.id}
-              lat={value.lat}
-              lng={value.lon}
-              location={value.location}
-            />
+            <>
+              <MarkerComponent 
+                lat={value.lat}
+                lng={value.lon}
+                location={"toronto"}
+              />
+            </>
           )
-        })}
+        })} */}
       </GoogleMapReact>
     </div>
   )

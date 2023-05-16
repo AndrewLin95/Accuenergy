@@ -118,7 +118,7 @@ function App() {
       indexOfFirstPost = indexOfLastPost - 10;
       setCurrPage(currPage + 1);
     } else if (value === "-") {
-      if ((currPage - 1) < 0) {
+      if ((currPage - 1) <= 0) {
         return;
       }
       indexOfLastPost = (currPage - 1) * 10; 

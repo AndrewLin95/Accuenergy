@@ -11,10 +11,10 @@ const SearchHistory = ({
         <div className='pr-4'>Searched Places</div>
         <button onClick={() => handleDeleteSearchHistory}>Delete</button>
       </div>
-      <div className='flex flex-col justify-between items-center h-full pb-32'>
+      <div className='flex flex-col items-center h-full pb-32'>
         {Object.entries(searchHistoryDisplayData).map(([key, value]) => {
           return (
-            <div key={key} className="searchHistoryContainer">
+            <div key={key} className="searchHistoryContainer pb-8">
               <input type={'checkbox'} onClick={(e) => handleDeleteFlagClick(e.target.checked, value.id)}/>
               <div> 
                 {value.location}
