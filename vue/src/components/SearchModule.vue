@@ -28,14 +28,15 @@
       <div className='flex flex-col items-center h-full pb-32'>
         <div v-for="(value, key) in searchHistoryDisplayData" 
           :key="key"
-          className="pb-8 flex justify-center items-center"
+          className="pb-8 w-full flex justify-center items-center"
         >
           <input 
             type="checkbox"
             @click="handleDeleteFlagClick($event.target.checked, value.id)"
             :checked="value.deleteFlag"
+            className="w-14 ml-12"
           />
-          <div className="pl-8">
+          <div className="w-full">
             {{ value.location }}
           </div>
         </div>
