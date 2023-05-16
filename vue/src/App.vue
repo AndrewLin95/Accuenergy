@@ -1,18 +1,24 @@
 <script>
 import Header from './components/Header.vue';
 import SearchModule from './components/SearchModule.vue';
+import Map from './components/Map.vue';
+
+import { GoogleMap, Marker } from 'vue3-google-map';
 
 const weatherAPI = import.meta.env.VITE_APP_WEATHER_API_KEY;
+const googleMapsAPI = import.meta.env.VITE_MAP_API;
 
 export default {
   components: {
     Header,
-    SearchModule
+    SearchModule,
+    GoogleMap,
+    Marker,
   },
 
   data() {
     return {
-      geoLocation: [],
+      geoLocation: "",
       searchText: "",
       searchHistory: [],
 
@@ -20,6 +26,8 @@ export default {
       currPage: 1,
       searchHistoryDisplayData: [],
       paginationState: [1],
+
+      loadingMap: true,
     }
   },
 
@@ -31,10 +39,10 @@ export default {
         maximumAge: 0
       }
       const success = (position) => {
-        this.geoLocation = [
-          position.coords.latitude,
-          position.coords.longitude
-        ]
+        this.geoLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
       }
       const error = (err) => {
         console.log(`ERROR: ${err.code}`);
@@ -59,7 +67,7 @@ export default {
         id: uid,
         location: weatherGeocode[0].name,
         lat: weatherGeocode[0].lat,
-        lon: weatherGeocode[0].lon,
+        lng: weatherGeocode[0].lon,
         searchTime: new Date(),
         deleteFlag: false,
       }
@@ -166,6 +174,13 @@ export default {
         }
       }
     },
+
+    geoLocation() {
+      if (this.geoLocation !== "") {
+        console.log('returing false')
+        this.loadingMap = false;
+      }
+    },  
   }
 }
 
@@ -186,6 +201,25 @@ export default {
         :handlePageChange="handlePageChange"
         :paginationState="paginationState"
       />
+      <div v-if="loadingMap === false" className="h-full w-full border-pink-700">
+        <GoogleMap 
+          :api-key="googleMapsAPI"
+          :center="geoLocation"
+          :zoom="11"
+          style="width: 100%; height: 100%"
+        >
+          <Marker :options="{position: geoLocation}" />
+          <Marker v-for="(value, key) in searchHistoryDisplayData" 
+            :options="{
+              position: {
+                lat: value.lat,
+                lng: value.lng
+              }
+            }"
+          />
+
+        </GoogleMap>
+      </div>
     </div>
   </div>
 </template>
