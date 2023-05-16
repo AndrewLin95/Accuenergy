@@ -169,7 +169,6 @@ export default {
       }
 
       this.searchHistoryDisplayData = tempDisplayData;
-      console.log(tempDisplayData);
       this.searchHistory = tempSearchHistory;
     }
   },
