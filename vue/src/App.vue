@@ -1,12 +1,11 @@
 <script>
 import Header from './components/Header.vue';
 import SearchModule from './components/SearchModule.vue';
-import Map from './components/Map.vue';
 
 import { GoogleMap, Marker } from 'vue3-google-map';
 
 const weatherAPI = import.meta.env.VITE_APP_WEATHER_API_KEY;
-const googleMapsAPI = import.meta.env.VITE_MAP_API;
+const googleMapsAPI = ""
 
 export default {
   components: {
@@ -21,6 +20,7 @@ export default {
       geoLocation: "",
       searchText: "",
       searchHistory: [],
+      updateFlag: false,
 
       numberOfPages: 1,
       currPage: 1,
@@ -63,6 +63,8 @@ export default {
         return;
       }
 
+      this.updateFlag = false;
+
       const searchObject = {
         id: uid,
         location: weatherGeocode[0].name,
@@ -75,7 +77,7 @@ export default {
       if (this.searchHistory.length === 0){
         this.numberOfPages = 1;
       } else {
-        const _numberOfPages = Math.ceil((this.searchHistory.length) / 10);
+        const _numberOfPages = Math.ceil((this.searchHistory.length + 1) / 10);
         if (_numberOfPages !== this.numberOfPages) {
           this.numberOfPages = _numberOfPages;
         }
@@ -116,11 +118,52 @@ export default {
       const filteredSearchHistory = tempSearchHistory.slice(indexOfFirstPost, indexOfLastPost);
       this.searchHistoryDisplayData = filteredSearchHistory;
     },
+
+    handleDeleteFlagClick(checkboxState, id) {
+      this.updateFlag = true;
+      const itemIndex = this.searchHistory.findIndex(searchItem => searchItem.id === id)
+      const tempSearchHistory = [...this.searchHistory];
+
+      if (checkboxState) {
+        tempSearchHistory[itemIndex].deleteFlag = true;
+      } else {
+        tempSearchHistory[itemIndex].deleteFlag = false;
+      }
+      this.searchHistory = tempSearchHistory;
+    },
+
+    handleDeleteSearchHistory() {
+      this.updateFlag = true;
+
+      let i = 0;
+      const tempSearchHistory = [...this.searchHistory];
+      while (i < tempSearchHistory.length) {
+        if (tempSearchHistory[i].deleteFlag) {
+          tempSearchHistory.splice(i, 1);
+        } else {
+          i++;
+        }
+      }
+
+      let j = 0;
+      const tempDisplayData = [...this.searchHistoryDisplayData]
+      while (j < tempDisplayData.length) {
+        if (tempDisplayData[j].deleteFlag) {
+          tempDisplayData.splice(j, 1);
+        } else {
+          j++;
+        }
+      }
+
+      this.searchHistoryDisplayData = tempDisplayData;
+      console.log(tempDisplayData);
+      this.searchHistory = tempSearchHistory;
+    }
   },
 
   watch: {
     searchHistory() { 
-      if (this.searchHistory.length > 0) {
+      if (this.searchHistory.length > 0 && !this.updateFlag) {
         if (this.searchHistoryDisplayData.length <= 9 && this.currPage === this.numberOfPages) {
           this.searchHistoryDisplayData = [...this.searchHistoryDisplayData, this.searchHistory[this.searchHistory.length - 1]]
         }
@@ -177,7 +220,6 @@ export default {
 
     geoLocation() {
       if (this.geoLocation !== "") {
-        console.log('returing false')
         this.loadingMap = false;
       }
     },  
@@ -200,6 +242,8 @@ export default {
         :searchHistoryDisplayData="searchHistoryDisplayData"
         :handlePageChange="handlePageChange"
         :paginationState="paginationState"
+        :handleDeleteFlagClick="handleDeleteFlagClick"
+        :handleDeleteSearchHistory="handleDeleteSearchHistory"
       />
       <div v-if="loadingMap === false" className="h-full w-full border-pink-700">
         <GoogleMap 
@@ -210,6 +254,7 @@ export default {
         >
           <Marker :options="{position: geoLocation}" />
           <Marker v-for="(value, key) in searchHistoryDisplayData" 
+            :key="key"
             :options="{
               position: {
                 lat: value.lat,
@@ -217,7 +262,6 @@ export default {
               }
             }"
           />
-
         </GoogleMap>
       </div>
     </div>

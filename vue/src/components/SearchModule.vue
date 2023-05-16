@@ -17,7 +17,11 @@
     <div className="h-full border border-green-300">
       <div className='flex flex-row p-4 text-2xl'>
         <div className='pr-4'>Searched Places</div>
-        <button>Delete</button>
+        <button
+          @click="handleDeleteSearchHistory()"
+        >
+          Delete
+        </button>
       </div>
       <div className='flex flex-col items-center h-full pb-32 border border-b-violet-600'>
         <div v-for="(value, key) in searchHistoryDisplayData" 
@@ -26,10 +30,12 @@
         >
           <input 
             type="checkbox"
-            />
-            <div>
-              {{ value.location }}
-            </div>
+            @click="handleDeleteFlagClick($event.target.checked, value.id)"
+            :checked="value.deleteFlag"
+          />
+          <div>
+            {{ value.location }}
+          </div>
         </div>
       </div>
     </div>
@@ -60,7 +66,9 @@
       handleSearchClick: Function,
       searchHistoryDisplayData: Object,
       handlePageChange: Function,
-      paginationState: Object
+      paginationState: Object,
+      handleDeleteFlagClick: Function,
+      handleDeleteSearchHistory: Function,
     },
     methods: {
       handleSearchTextChange(value) {
@@ -71,6 +79,12 @@
       },
       handlePageChange(value) {
         this.handlePageChange(value);
+      },
+      handleDeleteFlagClick(state, id) {
+        this.handleDeleteFlagClick(state, id);
+      },
+      handleDeleteSearchHistory() {
+        this.handleDeleteSearchHistory();
       }
     }
   }
