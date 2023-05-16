@@ -19,7 +19,7 @@ export default {
       numberOfPages: 1,
       currPage: 1,
       searchHistoryDisplayData: [],
-      paginationState: [],
+      paginationState: [1],
     }
   },
 
@@ -76,6 +76,37 @@ export default {
       const tempSearchHistory = [...this.searchHistory, searchObject];
       this.searchHistory = tempSearchHistory
       this.searchText = ""
+    },
+
+    handlePageChange(value) {
+      if (value === "...") {
+        return;
+      }
+      let indexOfFirstPost;
+      let indexOfLastPost;
+      if (value === "+") {
+        if ((this.currPage + 1) > this.numberOfPages) {
+          return;
+        }
+        indexOfLastPost = (this.currPage + 1) * 10; 
+        indexOfFirstPost = indexOfLastPost - 10;
+        this.currPage = this.currPage + 1
+      } else if (value === "-") {
+        if ((this.currPage - 1) <= 0) {
+          return;
+        }
+        indexOfLastPost = (this.currPage - 1) * 10; 
+        indexOfFirstPost = indexOfLastPost - 10;
+        this.currPage = this.currPage - 1
+      } else {
+        indexOfLastPost = value * 10; 
+        indexOfFirstPost = indexOfLastPost - 10;
+        this.currPage = value
+      }
+
+      const tempSearchHistory = [...this.searchHistory];
+      const filteredSearchHistory = tempSearchHistory.slice(indexOfFirstPost, indexOfLastPost);
+      this.searchHistoryDisplayData = filteredSearchHistory;
     },
   },
 
@@ -151,6 +182,9 @@ export default {
         :handleSearchText="handleSearchText"
         :searchText="searchText"
         :handleSearchClick="handleSearchClick"
+        :searchHistoryDisplayData="searchHistoryDisplayData"
+        :handlePageChange="handlePageChange"
+        :paginationState="paginationState"
       />
     </div>
   </div>

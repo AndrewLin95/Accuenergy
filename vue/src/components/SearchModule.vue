@@ -1,9 +1,9 @@
 <template>
   <div className="flex flex-col w-1/5 h-full border border-red-500">
-
+    <!-- Search bar -->
     <div className="flex flex-row p-4">
       <input 
-        className="text-black w-2/3 mr-2"
+        className="w-2/3 mr-2 text-white p-2"
         @input="handleSearchTextChange($event.target.value)"
         :value="searchText"
       />
@@ -13,15 +13,41 @@
         Search
       </button>
     </div>
-    
+    <!-- Search Results -->
     <div className="h-full border border-green-300">
       <div className='flex flex-row p-4 text-2xl'>
         <div className='pr-4'>Searched Places</div>
         <button>Delete</button>
       </div>
       <div className='flex flex-col items-center h-full pb-32 border border-b-violet-600'>
-        <!-- search content -->
+        <div v-for="(value, key) in searchHistoryDisplayData" 
+          :key="key"
+          className="pb-8 flex justify-center items-center"
+        >
+          <input 
+            type="checkbox"
+            />
+            <div>
+              {{ value.location }}
+            </div>
+        </div>
       </div>
+    </div>
+    <!-- Pagination -->
+    <div className="flex flex-row justify-center pb-4">
+      <button className="w-12 h-12 border" @click="handlePageChange('-')">
+        {{ "<" }}
+      </button>
+      <button v-for="(value, key) in paginationState"
+        className="w-12 h-12 border"
+        @click="handlePageChange(value)"
+        :key="key"
+      >
+        {{ value }}
+      </button>
+      <button className="w-12 h-12 border" @click="handlePageChange('+')">
+        {{ ">" }}
+      </button>
     </div>
   </div>
 </template>
@@ -31,7 +57,10 @@
     props: {
       handleSearchText: Function,
       searchText: String,
-      handleSearchClick: Function
+      handleSearchClick: Function,
+      searchHistoryDisplayData: Object,
+      handlePageChange: Function,
+      paginationState: Object
     },
     methods: {
       handleSearchTextChange(value) {
@@ -40,7 +69,9 @@
       handleSearchClick() {
         this.handleSearchClick();
       },
+      handlePageChange(value) {
+        this.handlePageChange(value);
+      }
     }
   }
-
 </script>
