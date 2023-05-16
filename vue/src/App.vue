@@ -1,17 +1,47 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+import Header from './components/Header.vue';
+import SearchModule from './components/SearchModule.vue';
+
+export default {
+  components: {
+    Header,
+    SearchModule
+  },
+  data() {
+    return {
+      geoLocation: []
+    }
+  },
+  methods: {
+    handleGeoLocationClick() {
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      }
+      const success = (position) => {
+        this.geoLocation = [
+          position.coords.latitude,
+          position.coords.longitude
+        ]
+      }
+      const error = (err) => {
+        console.log(`ERROR: ${err.code}`);
+      }
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    }
+  }
+}
+
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div className="border border-red-500 w-screen h-screen overflow-hidden flex flex-col justify-center items-center">
+    <Header :geoLocation="geoLocation" :handleGeoLocationClick="handleGeoLocationClick" />
+    <div className='flex flex-row w-full h-full'>
+      <SearchModule />
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <style scoped>
