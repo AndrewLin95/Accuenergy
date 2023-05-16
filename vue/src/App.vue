@@ -2,6 +2,8 @@
 import Header from './components/Header.vue';
 import SearchModule from './components/SearchModule.vue';
 
+const weatherAPI = import.meta.env.VITE_APP_WEATHER_API_KEY;
+
 export default {
   components: {
     Header,
@@ -9,7 +11,11 @@ export default {
   },
   data() {
     return {
-      geoLocation: []
+      geoLocation: [],
+      searchText: "",
+
+      numberOfPages: 1,
+      searchHistory: []
     }
   },
   methods: {
@@ -29,7 +35,43 @@ export default {
         console.log(`ERROR: ${err.code}`);
       }
       navigator.geolocation.getCurrentPosition(success, error, options);
-    }
+    },
+
+    handleSearchText(value) {
+      this.searchText = value
+    },
+
+    async handleSearchClick() {
+      const uid = Math.random().toString(16).slice(2)
+      const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${this.searchText}&appid=${weatherAPI}`, {mode:'cors'})
+      const weatherGeocode = await response.json();
+
+      if (weatherGeocode.length === 0) {
+        return;
+      }
+
+      const searchObject = {
+        id: uid,
+        location: weatherGeocode[0].name,
+        lat: weatherGeocode[0].lat,
+        lon: weatherGeocode[0].lon,
+        searchTime: new Date(),
+        deleteFlag: false,
+      }
+
+      if (this.searchHistory.length === 0){
+        this.numberOfPages = 1;
+      } else {
+        const _numberOfPages = Math.ceil((this.searchHistory.length) / 10);
+        if (_numberOfPages !== this.numberOfPages) {
+          this.numberOfPages = _numberOfPages;
+        }
+      }
+
+      const tempSearchHistory = [...this.searchHistory, searchObject];
+      this.searchHistory = tempSearchHistory
+      this.searchText = ""
+    },
   }
 }
 
@@ -37,9 +79,17 @@ export default {
 
 <template>
   <div className="border border-red-500 w-screen h-screen overflow-hidden flex flex-col justify-center items-center">
-    <Header :geoLocation="geoLocation" :handleGeoLocationClick="handleGeoLocationClick" />
+    <Header 
+      :geoLocation="geoLocation" 
+      :handleGeoLocationClick="handleGeoLocationClick" 
+    />
+    {{ testVar }} aa
     <div className='flex flex-row w-full h-full'>
-      <SearchModule />
+      <SearchModule 
+        :handleSearchText="handleSearchText"
+        :searchText="searchText"
+        :handleSearchClick="handleSearchClick"
+      />
     </div>
   </div>
 </template>
