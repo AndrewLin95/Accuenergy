@@ -9,15 +9,20 @@ export default {
     Header,
     SearchModule
   },
+
   data() {
     return {
       geoLocation: [],
       searchText: "",
+      searchHistory: [],
 
       numberOfPages: 1,
-      searchHistory: []
+      currPage: 1,
+      searchHistoryDisplayData: [],
+      paginationState: [],
     }
   },
+
   methods: {
     handleGeoLocationClick() {
       const options = {
@@ -72,6 +77,64 @@ export default {
       this.searchHistory = tempSearchHistory
       this.searchText = ""
     },
+  },
+
+  watch: {
+    searchHistory() { 
+      if (this.searchHistory.length > 0) {
+        if (this.searchHistoryDisplayData.length <= 9 && this.currPage === this.numberOfPages) {
+          this.searchHistoryDisplayData = [...this.searchHistoryDisplayData, this.searchHistory[this.searchHistory.length - 1]]
+        }
+      }
+    },
+
+    numberOfPages() {
+      if (this.numberOfPages <= 5) {
+        let i = 0;
+        const tempPaginationArray = [];
+        while (i < this.numberOfPages) {
+          tempPaginationArray.push(i + 1);
+          i++
+        }
+        this.paginationState = tempPaginationArray;
+      } else {
+        if (this.currPage === 1) {
+          this.paginationState = [1, 2, "...", this.numberOfPages];
+        } else if (this.currPage === 2) {
+          this.paginationState = [1, 2, 3, "...", this.numberOfPages];
+        } else if (this.currPage === this.numberOfPages) {
+          this.paginationState = [1, "...", this.currPage - 1, this.currPage];
+        } else if (this.currPage === (this.numberOfPages - 1)) {
+          this.paginationState = [1, "...", this.currPage -1, this.currPage, this.numberOfPages];
+        } else {
+          this.paginationState = [1, "...", this.currPage - 1, this.currPage, this.currPage + 1, "...", this.numberOfPages];
+        }
+      }
+    },
+
+    currPage() {
+      if (this.numberOfPages <= 5) {
+        let i = 0;
+        const tempPaginationArray = [];
+        while (i < this.numberOfPages) {
+          tempPaginationArray.push(i + 1);
+          i++
+        }
+        this.paginationState = tempPaginationArray;
+      } else {
+        if (this.currPage === 1) {
+          this.paginationState = [1, 2, "...", this.numberOfPages];
+        } else if (this.currPage === 2) {
+          this.paginationState = [1, 2, 3, "...", this.numberOfPages];
+        } else if (this.currPage === this.numberOfPages) {
+          this.paginationState = [1, "...", this.currPage - 1, this.currPage];
+        } else if (this.currPage === (this.numberOfPages - 1)) {
+          this.paginationState = [1, "...", this.currPage -1, this.currPage, this.numberOfPages];
+        } else {
+          this.paginationState = [1, "...", this.currPage - 1, this.currPage, this.currPage + 1, "...", this.numberOfPages];
+        }
+      }
+    },
   }
 }
 
@@ -83,7 +146,6 @@ export default {
       :geoLocation="geoLocation" 
       :handleGeoLocationClick="handleGeoLocationClick" 
     />
-    {{ testVar }} aa
     <div className='flex flex-row w-full h-full'>
       <SearchModule 
         :handleSearchText="handleSearchText"
