@@ -41,7 +41,7 @@ function App() {
   const handleSearchButton = async () => {
     const uid = Math.random().toString(16).slice(2)
 
-    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchLocation}&appid=59d8f83c0d0672671941c70c99060910`, {mode:'cors'})
+    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchLocation}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`, {mode:'cors'})
     const weatherGeocode = await response.json();
 
     if (weatherGeocode.length === 0) {
