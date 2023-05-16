@@ -1,7 +1,6 @@
 import './searchHistory.css'
 
 const SearchHistory = ({
-  searchHistory,
   searchHistoryDisplayData,
   handleDeleteSearchHistory,
   handleDeleteFlagClick

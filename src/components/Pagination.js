@@ -1,14 +1,11 @@
-import { useEffect, useState } from "react";
 
 const Pagination = ({
-  currPage,
-  numberOfPages,
   paginationState,
   handlePageChange
 }) => {
   return (
     <div className="flex flex-row justify-center pb-4">
-      <button className="w-12 h-12 border">
+      <button className="w-12 h-12 border" onClick={() => handlePageChange("-")}>
         {"<"}
       </button>
       {Object.entries(paginationState).map(([key, value]) => {
@@ -18,7 +15,7 @@ const Pagination = ({
           </button>
         )
       })}
-      <button className="w-12 h-12 border">
+      <button className="w-12 h-12 border" onClick={() => handlePageChange("+")}>
         {">"}
       </button>
     </div>

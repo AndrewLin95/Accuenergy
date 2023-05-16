@@ -6,7 +6,7 @@ import SearchHistory from './components/SearchHistory';
 import Pagination from './components/Pagination';
 
 function App() {
-  const [geoLocation, setGeoLocation] = useState("geolocation");
+  const [geoLocation, setGeoLocation] = useState();
   const [searchLocation, setSearchLocation] = useState("");
   const [searchHistory, setSearchHistory] = useState([]);
 
@@ -16,24 +16,21 @@ function App() {
   const [paginationState, setPaginationState] = useState([]);
 
   const handleButtonClick = () => {
-    console.log('test');
-
     const options = {
       enableHighAccuracy: true,
       timeout: 5000,
       maximumAge: 0
     }
-
     const success = (position) => {
-      console.log(position);
+      setGeoLocation([
+        position.coords.latitude,
+        position.coords.longitude
+      ])
     }
-
     const error = (err) => {
       console.log(`ERROR: ${err.code}`);
     }
-
     navigator.geolocation.getCurrentPosition(success, error, options);
-
   }
 
   const handleSearchText = (value) => {
@@ -59,12 +56,6 @@ function App() {
         setNumberOfPages(_numberOfPages);
       }
     }
-
-    // console.log(searchHistory)
-    // // add to current page
-    // if (searchHistoryDisplayData.length <= 9 && currPage === numberOfPages) {
-    //   setSearchHistoryDisplayData([...searchHistoryDisplayData, searchObject])
-    // }
 
     const tempSearchHistory = [...searchHistory, searchObject];
     setSearchHistory(tempSearchHistory);
@@ -107,12 +98,30 @@ function App() {
     if (value === "...") {
       return;
     }
-    const indexOfLastPost = value * 10; 
-    const indexOfFirstPost = indexOfLastPost - 10;
+    let indexOfFirstPost;
+    let indexOfLastPost;
+    if (value === "+") {
+      if ((currPage + 1) > numberOfPages) {
+        return;
+      }
+      indexOfLastPost = (currPage + 1) * 10; 
+      indexOfFirstPost = indexOfLastPost - 10;
+      setCurrPage(currPage + 1);
+    } else if (value === "-") {
+      if ((currPage - 1) < 0) {
+        return;
+      }
+      indexOfLastPost = (currPage - 1) * 10; 
+      indexOfFirstPost = indexOfLastPost - 10;
+      setCurrPage(currPage - 1);
+    } else {
+      indexOfLastPost = value * 10; 
+      indexOfFirstPost = indexOfLastPost - 10;
+      setCurrPage(value);
+    }
 
     const tempSearchHistory = [...searchHistory];
     const filteredSearchHistory = tempSearchHistory.slice(indexOfFirstPost, indexOfLastPost);
-    setCurrPage(value);
     setSearchHistoryDisplayData(filteredSearchHistory)
   }
 
@@ -136,7 +145,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div className='border border-red-500 w-screen h-screen overflow-hidden flex flex-col justify-center items-center'>
-          <CurrentLocationButton handleButtonClick={handleButtonClick}/>
+          <CurrentLocationButton 
+            handleButtonClick={handleButtonClick}
+            geoLocation={geoLocation}
+          />
           <div className='flex flex-row w-full h-full'>
             <div className='flex flex-col w-1/5 h-full border border-red-500'>
               <SearchModule 
@@ -150,14 +162,12 @@ function App() {
                 handleDeleteFlagClick={handleDeleteFlagClick}
               />
               <Pagination 
-                currPage={currPage}
-                numberOfPages={numberOfPages}
                 paginationState={paginationState}
                 handlePageChange={handlePageChange}
               />
             </div>
             <div>
-                {geoLocation};
+              geolocation
             </div>
           </div>
         </div>
