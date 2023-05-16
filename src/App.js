@@ -4,6 +4,7 @@ import CurrentLocationButton from './components/currentLocationButton';
 import SearchModule from './components/SearchModule';
 import SearchHistory from './components/SearchHistory';
 import Pagination from './components/Pagination';
+import Map from './components/Map';
 
 function App() {
   const [geoLocation, setGeoLocation] = useState();
@@ -37,13 +38,22 @@ function App() {
     setSearchLocation(value);
   }
 
-  const handleSearchButton = () => {
+  const handleSearchButton = async () => {
     const uid = Math.random().toString(16).slice(2)
+
+    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchLocation}&appid=59d8f83c0d0672671941c70c99060910`, {mode:'cors'})
+    const weatherGeocode = await response.json();
+
+    if (weatherGeocode.length === 0) {
+      return;
+    }
+    console.log(weatherGeocode);
+
     const searchObject = {
       id: uid,
-      location: searchLocation,
-      lat: 'testLat',
-      lon: 'testLon',
+      location: weatherGeocode[0].name,
+      lat: weatherGeocode[0].lat,
+      lon: weatherGeocode[0].lon,
       searchTime: new Date(),
       deleteFlag: false,
     }
@@ -166,8 +176,11 @@ function App() {
                 handlePageChange={handlePageChange}
               />
             </div>
-            <div>
-              geolocation
+            <div className='h-full w-full'>
+              <Map 
+                geoLocation={geoLocation}
+                searchHistoryDisplayData={searchHistoryDisplayData}
+              />
             </div>
           </div>
         </div>

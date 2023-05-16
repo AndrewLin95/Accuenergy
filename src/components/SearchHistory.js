@@ -7,7 +7,7 @@ const SearchHistory = ({
 }) => {
   return (
     <div className='h-full'>
-      <div className='flex flex-row p-4'>
+      <div className='flex flex-row p-4 text-2xl'>
         <div className='pr-4'>Searched Places</div>
         <button onClick={() => handleDeleteSearchHistory}>Delete</button>
       </div>
