@@ -1,5 +1,5 @@
 <template>
-  <div className="flex flex-col w-1/5 h-full border border-red-500">
+  <div className="flex flex-col w-1/5 h-full border border-gray-600">
     <!-- Search bar -->
     <div className="flex flex-row p-4">
       <input 
@@ -14,16 +14,17 @@
       </button>
     </div>
     <!-- Search Results -->
-    <div className="h-full border border-green-300">
-      <div className='flex flex-row p-4 text-2xl'>
-        <div className='pr-4'>Searched Places</div>
+    <div className="h-full">
+      <div className='flex flex-row justify-center items-center p-4 text-2xl'>
+        <div className='pr-4 text-lg'>Searched Places</div>
         <button
           @click="handleDeleteSearchHistory()"
+          className="text-lg"
         >
           Delete
         </button>
       </div>
-      <div className='flex flex-col items-center h-full pb-32 border border-b-violet-600'>
+      <div className='flex flex-col items-center h-full pb-32'>
         <div v-for="(value, key) in searchHistoryDisplayData" 
           :key="key"
           className="pb-8 flex justify-center items-center"
@@ -33,7 +34,7 @@
             @click="handleDeleteFlagClick($event.target.checked, value.id)"
             :checked="value.deleteFlag"
           />
-          <div>
+          <div className="pl-8">
             {{ value.location }}
           </div>
         </div>

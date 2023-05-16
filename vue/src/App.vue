@@ -242,7 +242,7 @@ export default {
 </script>
 
 <template>
-  <div className="border border-red-500 w-screen h-screen overflow-hidden flex flex-col justify-center items-center">
+  <div className="w-screen h-screen overflow-hidden flex flex-col justify-center items-center">
     <Header 
       :geoLocation="geoLocation" 
       :handleGeoLocationClick="handleGeoLocationClick" 
