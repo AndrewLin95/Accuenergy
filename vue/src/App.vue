@@ -2,9 +2,6 @@
 import Header from './components/Header.vue';
 import SearchModule from './components/SearchModule.vue';
 import ts from '@mapbox/timespace';
-import moment from 'moment-timezone';
-import { parseISO } from 'date-fns';
-import { format, utcToZonedTime} from 'date-fns-tz';
 
 import { GoogleMap, Marker } from 'vue3-google-map';
 
